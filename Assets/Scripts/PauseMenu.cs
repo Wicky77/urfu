@@ -16,6 +16,9 @@ public class PauseMenu : MonoBehaviour
     [Header("Ссылки")]
     public Character character;
     
+    [Header("Чат NPC (перетащи сюда ChatPanel)")]
+    public GameObject chatPanel; // ← ДОБАВЬ ЭТО
+    
     private bool isPaused = false;
     
     void Start()
@@ -39,13 +42,19 @@ public class PauseMenu : MonoBehaviour
     // Метод для Input System
     public void OnPause(InputValue value)
     {
-        if (value.isPressed)
+        if (!value.isPressed) return;
+        
+        // ✅ НОВАЯ ПРОВЕРКА: если чат открыт — НЕ открываем паузу
+        if (chatPanel != null && chatPanel.activeSelf)
         {
-            if (isPaused)
-                ResumeGame();
-            else
-                PauseGame();
+            Debug.Log("Чат открыт, пауза не включается");
+            return;
         }
+        
+        if (isPaused)
+            ResumeGame();
+        else
+            PauseGame();
     }
     
     void PauseGame()
